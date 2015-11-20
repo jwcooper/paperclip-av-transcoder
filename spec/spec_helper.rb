@@ -34,11 +34,13 @@ class Document < ActiveRecord::Base
     styles: {
       small: {
         format: 'ogv',
+        width: 320,
         convert_options: {
           output: {
             ab: '256k',
             ar: 44100,
-            ac: 2
+            ac: 2,
+            vf: "scale=320:-2"
           }
         }
       },

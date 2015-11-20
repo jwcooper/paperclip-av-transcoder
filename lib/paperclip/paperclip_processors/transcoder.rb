@@ -18,6 +18,7 @@ module Paperclip
       @convert_options  = set_convert_options(options)
 
       @format           = options[:format]
+      @width            = options[:width]
 
       @geometry         = options[:geometry]
       unless @geometry.nil?
@@ -66,7 +67,11 @@ module Paperclip
           end
           if @convert_options[:output]
             @convert_options[:output].each do |h|
-              @cli.add_output_param h
+              if h[0] == :vf
+                @cli.add_output_param h if @meta[:width] >= @width
+              else
+                @cli.add_output_param h
+              end
             end
           end
         end
