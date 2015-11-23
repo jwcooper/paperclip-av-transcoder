@@ -68,7 +68,13 @@ module Paperclip
           if @convert_options[:output]
             @convert_options[:output].each do |h|
               if h[0] == :vf
-                @cli.add_output_param h if @meta[:width] >= @width
+                if @meta[:width] < @width
+                  #modify the scale on smaller images to ensure it's divisible
+                  #by two
+                  h[1] = "\"scale=trunc(iw/2)*2:trunc(ih/2)*2\""
+                end
+
+                @cli.add_output_param h
               else
                 @cli.add_output_param h
               end
