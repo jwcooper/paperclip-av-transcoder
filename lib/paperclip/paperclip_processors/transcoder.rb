@@ -37,6 +37,12 @@ module Paperclip
 
       @convert_options[:output][:s] = format_geometry(@geometry) if @geometry.present?
 
+      # add support for cropping the video if model supports it
+      target = attachment.instance
+      if target.respond_to?(:cropping?) && target.cropping?
+        @convert_options[:output]["filter:v"] = "crop=#{target.crop_w}:#{target.crop_h}:#{target.crop_x}:#{target.crop_y}"
+      end
+
       attachment.instance_write(:meta, @meta) if attachment
     end
 
