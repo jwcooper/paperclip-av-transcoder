@@ -40,7 +40,8 @@ module Paperclip
       # add support for cropping the video if model supports it
       target = attachment.instance
       if target.respond_to?(:cropping?) && target.cropping?
-        @convert_options[:output]["filter:v"] = "crop=#{target.crop_w}:#{target.crop_h}:#{target.crop_x}:#{target.crop_y}"
+        crop_option = "crop=#{round_even(target.crop_w)}:#{round_even(target.crop_h)}:#{round_even(target.crop_x)}:#{round_even(target.crop_y)}"
+        @convert_options[:output]["filter:v"] = crop_option
       end
 
       attachment.instance_write(:meta, @meta) if attachment
@@ -120,6 +121,13 @@ module Paperclip
 
     def output_is_image?
       !!@format.to_s.match(/jpe?g|png|gif$/)
+    end
+
+    def round_even(num)
+      num = num.to_i
+      return 0 if num.zero?
+
+      (num / 2).round(0) * 2
     end
   end
 
